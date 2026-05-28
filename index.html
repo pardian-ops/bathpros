@@ -70,6 +70,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:4px 24
 .hero h1{font-size:clamp(3rem,6vw,5rem);font-weight:900;color:var(--navy);animation:rise .7s .05s both;line-height:.92}
 .hero h1 em{font-style:normal;color:var(--royal)}
 .hero h1 .strike{position:relative;color:var(--navy);opacity:.45}
+.hero h1 .reglazed{color:var(--green)}
 .hero h1 .strike::after{content:'';position:absolute;left:-2%;top:48%;width:104%;height:6px;background:var(--green);transform:rotate(-3deg);border-radius:3px}
 .hero p.lede{font-size:1.18rem;color:#3d4f6b;max-width:520px;margin:22px 0 30px;animation:rise .7s .12s both}
 .hero p.lede strong{color:var(--navy)}
@@ -88,7 +89,10 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:4px 24
 /* hero before/after */
 .hero-visual{position:relative;animation:rise .8s .2s both}
 .ba-card{position:relative;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);border:8px solid #fff;background:#fff}
-.ba-card .split{position:relative;height:430px;display:flex}
+.ba-viewport{position:relative;overflow:hidden;height:430px}
+.ba-track{display:flex;height:100%;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+.ba-slide{flex:0 0 100%;width:100%;height:100%}
+.ba-card .split{position:relative;height:100%;display:flex}
 .ba-half{flex:1;position:relative;display:grid;place-items:center;overflow:hidden}
 .ba-before{background:linear-gradient(135deg,#b7a98f,#8d7d63)}
 .ba-after{background:linear-gradient(135deg,#eaf2fb,#cfe0f5)}
@@ -102,6 +106,34 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:4px 24
 .ba-after .ba-tag{right:14px;background:var(--green);color:#fff}
 .ba-divider{position:absolute;top:0;bottom:0;left:50%;width:3px;background:#fff;transform:translateX(-50%);z-index:3}
 .ba-divider::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;background:#fff;border-radius:50%;display:grid;place-items:center;color:var(--royal);box-shadow:var(--shadow);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%231f6fd6' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M8 7h11M8 7l3-3M8 7l3 3M16 17H5M16 17l-3-3M16 17l-3 3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center}
+/* carousel fixtures: tile, sink, countertop */
+.ba-tile{width:80%;height:74%;border-radius:8px;position:relative;overflow:hidden;box-shadow:inset 0 12px 28px rgba(0,0,0,.18)}
+.ba-before .ba-tile{background:repeating-linear-gradient(0deg,rgba(60,48,30,.45) 0 2px,transparent 2px 25%),repeating-linear-gradient(90deg,rgba(60,48,30,.45) 0 2px,transparent 2px 25%),linear-gradient(135deg,#cabb9d,#a8966f)}
+.ba-before .ba-tile::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 22% 30%,rgba(60,48,30,.4) 3px,transparent 4px),radial-gradient(circle at 70% 65%,rgba(40,60,30,.35) 4px,transparent 5px),radial-gradient(circle at 48% 82%,rgba(60,48,30,.3) 3px,transparent 4px)}
+.ba-after .ba-tile{background:repeating-linear-gradient(0deg,rgba(150,180,215,.5) 0 2px,transparent 2px 25%),repeating-linear-gradient(90deg,rgba(150,180,215,.5) 0 2px,transparent 2px 25%),linear-gradient(135deg,#ffffff,#dfeefb)}
+.ba-after .ba-tile::before{content:'';position:absolute;top:8%;left:12%;width:30%;height:18%;background:rgba(255,255,255,.7);border-radius:50%;filter:blur(6px)}
+.ba-sink{width:60%;height:44%;border-radius:48%/54%;position:relative;box-shadow:inset 0 12px 26px rgba(0,0,0,.2)}
+.ba-before .ba-sink{background:radial-gradient(ellipse at 40% 32%,#cabb9d,#8f7f60)}
+.ba-before .ba-sink::after{content:'';position:absolute;inset:0;border-radius:inherit;background-image:radial-gradient(circle at 35% 45%,rgba(80,50,30,.45) 3px,transparent 4px),radial-gradient(circle at 62% 58%,rgba(60,48,30,.4) 2px,transparent 3px),radial-gradient(circle at 50% 74%,rgba(90,40,20,.4) 4px,transparent 5px)}
+.ba-after .ba-sink{background:radial-gradient(ellipse at 38% 28%,#fff,#d4e6fa);box-shadow:inset 0 12px 30px rgba(120,150,200,.35),inset 0 -5px 12px rgba(255,255,255,.85)}
+.ba-after .ba-sink::before{content:'';position:absolute;top:16%;left:22%;width:30%;height:14%;background:rgba(255,255,255,.75);border-radius:50%;filter:blur(3px)}
+.ba-counter{width:84%;height:38%;border-radius:8px;position:relative;box-shadow:inset 0 8px 20px rgba(0,0,0,.16),0 10px 22px rgba(0,0,0,.16)}
+.ba-before .ba-counter{background:linear-gradient(135deg,#c2b390,#9c8c68)}
+.ba-before .ba-counter::after{content:'';position:absolute;inset:0;border-radius:inherit;background-image:linear-gradient(95deg,transparent 39%,rgba(60,48,30,.3) 41%,transparent 43%),radial-gradient(circle at 30% 52%,rgba(60,48,30,.35) 3px,transparent 4px),radial-gradient(circle at 68% 40%,rgba(60,48,30,.3) 2px,transparent 3px)}
+.ba-after .ba-counter{background:linear-gradient(135deg,#f4f7fc,#d8e6f6)}
+.ba-after .ba-counter::after{content:'';position:absolute;inset:0;border-radius:inherit;background-image:radial-gradient(circle at 20% 35%,rgba(120,140,170,.4) 1.5px,transparent 2px),radial-gradient(circle at 55% 60%,rgba(120,140,170,.35) 1.5px,transparent 2px),radial-gradient(circle at 80% 30%,rgba(120,140,170,.4) 1.5px,transparent 2px),radial-gradient(circle at 40% 76%,rgba(120,140,170,.3) 1.5px,transparent 2px),radial-gradient(circle at 72% 80%,rgba(120,140,170,.35) 1.5px,transparent 2px)}
+.ba-after .ba-counter::before{content:'';position:absolute;top:10%;left:10%;width:34%;height:30%;background:rgba(255,255,255,.55);border-radius:50%;filter:blur(7px)}
+/* caption pill */
+.ba-cap{position:absolute;left:14px;bottom:14px;z-index:4;background:rgba(11,28,61,.78);color:#fff;font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:.72rem;padding:6px 12px;border-radius:6px}
+/* carousel nav arrows */
+.ba-nav{position:absolute;top:calc(50% - 8px);transform:translateY(-50%);z-index:6;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.92);border:0;cursor:pointer;display:grid;place-items:center;box-shadow:var(--shadow-sm);color:var(--navy);transition:background .2s,transform .15s}
+.ba-nav:hover{background:#fff;transform:translateY(-50%) scale(1.08)}
+.ba-nav svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.ba-prev{left:12px}.ba-next{right:12px}
+/* carousel dots */
+.ba-dots{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:6;display:flex;gap:8px}
+.ba-dot{width:9px;height:9px;border-radius:50%;border:0;padding:0;cursor:pointer;background:rgba(255,255,255,.55);transition:background .2s,width .2s}
+.ba-dot.active{background:#fff;width:22px;border-radius:5px}
 .price-float{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:13px 28px;border-radius:10px;box-shadow:var(--shadow);text-align:center;white-space:nowrap}
 .price-float b{font-family:var(--display);font-size:1.5rem;color:var(--green-bright);display:block;line-height:1}
 .price-float span{display:block;font-size:.74rem;letter-spacing:.04em;opacity:.85;margin-top:2px}
@@ -125,7 +157,12 @@ section.blk{padding:88px 0}
 
 /* SERVICES */
 .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.svc{background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px 26px;transition:transform .2s,box-shadow .25s,border-color .2s;position:relative;overflow:hidden}
+.svc{background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px 26px;transition:transform .2s,box-shadow .25s,border-color .2s;position:relative;overflow:hidden;cursor:pointer}
+.svc:focus-visible{outline:3px solid var(--royal);outline-offset:3px}
+.svc .more{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.03em;font-size:.92rem;color:var(--royal)}
+.svc .more svg{width:15px;height:15px;transition:transform .2s}
+.svc:hover .more svg{transform:translateX(4px)}
+.svc.feat .more{color:var(--green-bright)}
 .svc::before{content:'';position:absolute;top:0;left:0;width:100%;height:4px;background:linear-gradient(90deg,var(--royal),var(--green));transform:scaleX(0);transform-origin:left;transition:transform .3s}
 .svc:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:transparent}
 .svc:hover::before{transform:scaleX(1)}
@@ -240,6 +277,41 @@ footer{background:var(--navy-deep);color:#9bb0d4;padding:56px 0 28px;font-size:.
   section.blk{padding:62px 0}
   .logo-img{height:80px}
 }
+/* SERVICE MODAL / POPUP */
+.modal-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(11,28,61,.62);backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal{position:relative;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;background:#fff;border-radius:20px;box-shadow:0 30px 80px -20px rgba(11,28,61,.6);transform:translateY(24px) scale(.97);opacity:0;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.modal-overlay.open .modal{transform:translateY(0) scale(1);opacity:1}
+.modal-top{background:linear-gradient(165deg,var(--navy),var(--navy-deep));color:#fff;padding:30px 32px 26px;border-radius:20px 20px 0 0;position:relative;overflow:hidden}
+.modal-top::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:4px;background:linear-gradient(90deg,var(--royal),var(--green))}
+.modal-ic{width:56px;height:56px;border-radius:13px;background:rgba(255,255,255,.12);display:grid;place-items:center;color:var(--green-bright);margin-bottom:16px}
+.modal-ic svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:2}
+.modal-top h3{font-family:var(--display);font-size:2rem;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:6px;color:#fff;line-height:1}
+.modal-top .m-from{font-family:var(--display);font-weight:800;font-size:1.25rem;color:var(--green-bright)}
+.modal-close{position:absolute;top:16px;right:16px;width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.14);color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;display:grid;place-items:center;transition:background .2s}
+.modal-close:hover{background:rgba(255,255,255,.28)}
+.modal-body{padding:26px 32px 30px}
+.modal-body .m-desc{color:#3a4a64;font-size:1.02rem;line-height:1.6;margin-bottom:22px}
+.modal-body .m-inc-h{font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;font-size:1rem;color:var(--navy);margin-bottom:12px}
+.modal-body ul{list-style:none;display:grid;gap:10px;margin-bottom:24px;padding:0}
+.modal-body li{display:flex;gap:11px;align-items:flex-start;color:#3a4a64;font-size:.97rem;line-height:1.45}
+.modal-body li .tick{flex:none;width:22px;height:22px;border-radius:6px;background:var(--green);display:grid;place-items:center;margin-top:1px}
+.modal-body li .tick svg{width:13px;height:13px;color:#fff;stroke:currentColor;fill:none;stroke-width:3}
+.m-price-note{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:.92rem;color:#56657d;margin-bottom:24px;line-height:1.5}
+.m-price-note b{color:var(--navy)}
+.modal-cta{display:flex;gap:12px;flex-wrap:wrap}
+.modal-cta .btn{flex:1 1 auto;justify-content:center;text-align:center;display:inline-flex;align-items:center;gap:8px;padding:14px 20px;border-radius:10px;font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.02em;font-size:1.05rem;cursor:pointer;border:0;transition:transform .15s,box-shadow .2s}
+.modal-cta .m-primary{background:var(--green);color:#fff;box-shadow:0 8px 20px -8px rgba(106,169,46,.8)}
+.modal-cta .m-primary:hover{transform:translateY(-2px)}
+.modal-cta .m-ghost{background:#fff;color:var(--navy);border:2px solid var(--line)}
+.modal-cta .m-ghost:hover{border-color:var(--royal);color:var(--royal)}
+body.modal-lock{overflow:hidden}
+@media(max-width:560px){
+  .modal-top{padding:26px 22px 22px}
+  .modal-top h3{font-size:1.7rem}
+  .modal-body{padding:22px 22px 26px}
+  .modal-cta .btn{flex:1 1 100%}
+}
 </style>
 </head>
 <body>
@@ -272,7 +344,7 @@ footer{background:var(--navy-deep);color:#9bb0d4;padding:56px 0 28px;font-size:.
   <div class="wrap">
     <div class="hero-copy">
       <span class="eyebrow"><span class="dot"></span>Reglaze &middot; Save &middot; Love your bath again</span>
-      <h1>Your old tub, <em>like new</em> again &mdash; <span class="strike">not replaced.</span></h1>
+      <h1>Your old tub, <em>like new</em> again &mdash; <span class="strike">not replaced.</span> <span class="reglazed">Reglazed.</span></h1>
       <p class="lede">Professional bathtub, tile, shower &amp; countertop reglazing across Worcester County and Greater Boston. Save up to <strong>75%</strong> versus replacement &mdash; done in a single day, no demolition, no mess.</p>
       <div class="hero-cta">
         <a href="#quote" class="btn btn-primary">Get My Free Estimate
@@ -289,13 +361,46 @@ footer{background:var(--navy-deep);color:#9bb0d4;padding:56px 0 28px;font-size:.
       </div>
     </div>
     <div class="hero-visual">
-      <div class="ba-card">
-        <div class="split">
-          <div class="ba-half ba-before"><span class="ba-tag">Before</span><div class="ba-tub"></div></div>
-          <div class="ba-divider"></div>
-          <div class="ba-half ba-after"><span class="ba-tag">After</span><div class="ba-tub"></div></div>
+      <div class="ba-card" id="baCarousel">
+        <div class="ba-viewport">
+          <div class="ba-track">
+        <div class="ba-slide" data-price="from $450" data-vs="vs. $3,000+ to replace">
+          <div class="split">
+            <div class="ba-half ba-before"><span class="ba-tag">Before</span><div class="ba-tub"></div></div>
+            <div class="ba-divider"></div>
+            <div class="ba-half ba-after"><span class="ba-tag">After</span><div class="ba-tub"></div></div>
+            <span class="ba-cap">Cast-Iron Tub</span>
+          </div>
         </div>
-        <div class="price-float"><b>from $450</b><span>vs. $3,000+ to replace</span></div>
+        <div class="ba-slide" data-price="from $425" data-vs="vs. a full re-tile">
+          <div class="split">
+            <div class="ba-half ba-before"><span class="ba-tag">Before</span><div class="ba-tile"></div></div>
+            <div class="ba-divider"></div>
+            <div class="ba-half ba-after"><span class="ba-tag">After</span><div class="ba-tile"></div></div>
+            <span class="ba-cap">Shower &amp; Wall Tile</span>
+          </div>
+        </div>
+        <div class="ba-slide" data-price="from $150" data-vs="vs. a new install">
+          <div class="split">
+            <div class="ba-half ba-before"><span class="ba-tag">Before</span><div class="ba-sink"></div></div>
+            <div class="ba-divider"></div>
+            <div class="ba-half ba-after"><span class="ba-tag">After</span><div class="ba-sink"></div></div>
+            <span class="ba-cap">Porcelain Sink</span>
+          </div>
+        </div>
+        <div class="ba-slide" data-price="from $300" data-vs="vs. stone replacement">
+          <div class="split">
+            <div class="ba-half ba-before"><span class="ba-tag">Before</span><div class="ba-counter"></div></div>
+            <div class="ba-divider"></div>
+            <div class="ba-half ba-after"><span class="ba-tag">After</span><div class="ba-counter"></div></div>
+            <span class="ba-cap">Kitchen Countertop</span>
+          </div>
+        </div>
+          </div>
+        </div>
+        <button class="ba-nav ba-prev" aria-label="Previous example"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <button class="ba-nav ba-next" aria-label="Next example"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+        <div class="ba-dots" aria-label="Choose a before-and-after example"></div>
       </div>
     </div>
   </div>
@@ -316,42 +421,48 @@ footer{background:var(--navy-deep);color:#9bb0d4;padding:56px 0 28px;font-size:.
       <p>From a single chipped tub to a full bathroom refresh, we restore worn, dated, and damaged surfaces to a glossy, like-new finish &mdash; at a fraction of replacement cost.</p>
     </div>
     <div class="svc-grid">
-      <div class="svc">
+      <div class="svc" data-svc="bathtub" role="button" tabindex="0" aria-label="View details for Bathtub Reglazing">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Z"/><path d="M7 12V7a2 2 0 0 1 2-2 2 2 0 0 1 2 2"/></svg></div>
         <h3>Bathtub Reglazing</h3>
         <p>Porcelain, cast iron, fiberglass &amp; acrylic. Repair chips, erase stains, change the color.</p>
         <div class="from">From $450</div>
+        <span class="more">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
-      <div class="svc feat">
+      <div class="svc feat" data-svc="bundle" role="button" tabindex="0" aria-label="View details for Tub + Tile Bundle">
         <span class="badge">Best Value</span>
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
         <h3>Tub + Tile Bundle</h3>
         <p>Reglaze your tub and the surrounding wall tile together in one visit &mdash; the smartest way to transform a bathroom.</p>
         <div class="from">From $800</div>
+        <span class="more">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
-      <div class="svc">
+      <div class="svc" data-svc="tile" role="button" tabindex="0" aria-label="View details for Tile and Shower Reglazing">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></div>
         <h3>Tile &amp; Shower Reglazing</h3>
         <p>Shower walls, surrounds &amp; backsplashes resurfaced to a fresh, easy-clean glossy coat.</p>
         <div class="from">From $425</div>
+        <span class="more">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
-      <div class="svc">
+      <div class="svc" data-svc="counter" role="button" tabindex="0" aria-label="View details for Countertop Resurfacing">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10h18v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3Z"/><path d="M3 10V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"/></svg></div>
         <h3>Countertop Resurfacing</h3>
         <p>Bath &amp; kitchen counters &mdash; laminate, tile or Formica &mdash; with optional stone-look fleck finishes.</p>
         <div class="from">From $300</div>
+        <span class="more">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
-      <div class="svc">
+      <div class="svc" data-svc="sink" role="button" tabindex="0" aria-label="View details for Sink and Chip Repair">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c-3 4-6 6.5-6 10a6 6 0 0 0 12 0c0-3.5-3-6-6-10Z"/></svg></div>
         <h3>Sink &amp; Chip Repair</h3>
         <p>Porcelain sinks restored, plus fast chip &amp; scratch repair to make worn fixtures look new.</p>
         <div class="from">From $150</div>
+        <span class="more">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
-      <div class="svc">
+      <div class="svc" data-svc="commercial" role="button" tabindex="0" aria-label="View details for Commercial and Property">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21V10l8-6 8 6v11"/><path d="M9 21v-6h6v6"/></svg></div>
         <h3>Commercial &amp; Property</h3>
         <p>Hotels, apartments, B&amp;Bs &amp; rentals &mdash; volume reglazing with minimal unit downtime.</p>
         <div class="from">Volume pricing</div>
+        <span class="more">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
     </div>
   </div>
@@ -513,7 +624,7 @@ footer{background:var(--navy-deep);color:#9bb0d4;padding:56px 0 28px;font-size:.
       </div>
       <div><h4>Get In Touch</h4>
         <a href="tel:5083489615">&#128222; (508) 348-9615</a>
-        <a href="mailto:hello@thebathpros.com">&#9993;&#65039; hello@thebathpros.com</a>
+        <a href="mailto:hello@thebathpros.net">&#9993;&#65039; hello@thebathpros.net</a>
         <a href="#quote">Request a Free Quote</a>
         <p style="margin-top:10px;font-size:.82rem">Mon&ndash;Sat &middot; 7am&ndash;6pm</p>
       </div>
@@ -530,5 +641,106 @@ footer{background:var(--navy-deep);color:#9bb0d4;padding:56px 0 28px;font-size:.
   <a href="#quote" class="mb-quote">Free Quote</a>
 </div>
 
+
+<!-- SERVICE DETAIL MODAL -->
+<div class="modal-overlay" id="svcModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="svcModalTitle">
+    <button class="modal-close" id="svcModalClose" aria-label="Close">&times;</button>
+    <div class="modal-top">
+      <div class="modal-ic"><svg id="svcModalIcon" viewBox="0 0 24 24"></svg></div>
+      <h3 id="svcModalTitle"></h3>
+      <div class="m-from" id="svcModalFrom"></div>
+    </div>
+    <div class="modal-body">
+      <p class="m-desc" id="svcModalDesc"></p>
+      <div class="m-inc-h">What's included</div>
+      <ul id="svcModalInc"></ul>
+      <div class="m-price-note" id="svcModalNote"></div>
+      <div class="modal-cta">
+        <button class="btn m-primary" id="svcModalQuote">Get a Free Estimate</button>
+        <a class="btn m-ghost" href="tel:5083489615">&#128222; Call Now</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var SVC = {"bathtub": {"title": "Bathtub Reglazing", "from": "From $450", "opt": "Bathtub reglazing", "icon": "<path d=\"M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Z\"/><path d=\"M7 12V7a2 2 0 0 1 2-2 2 2 0 0 1 2 2\"/>", "desc": "Full surface restoration for porcelain, cast iron, fiberglass, and acrylic tubs. We repair chips and cracks, strip away years of staining and dullness, and spray on a fresh, glossy, factory-look finish \u2014 in the color of your choice. No tear-out, no new tub, no mess.", "inc": ["Deep clean, etch &amp; full surface prep", "Chip, crack &amp; rust-spot repair", "Professional spray reglaze coating", "Your choice of color \u2014 white, biscuit or custom", "Optional non-slip safety bottom", "3-year written warranty"], "note": "<b>From $450.</b> Final price depends on tub size, material, and surface condition \u2014 confirmed at your free in-person estimate."}, "bundle": {"title": "Tub + Tile Bundle", "from": "From $800", "opt": "Tub + tile bundle", "icon": "<rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/>", "desc": "The smartest way to transform a bathroom in a single visit. We reglaze your tub and the surrounding wall tile together so everything matches and looks brand new \u2014 for a fraction of the cost of a full remodel, and done in a day.", "inc": ["Everything in our bathtub reglazing service", "Surrounding wall-tile reglaze", "Grout-line cleaning &amp; sealing", "Coordinated, matching color finish", "Single-day completion", "3-year written warranty"], "note": "<b>From $800.</b> Bundling the tub and tile together costs less than booking them separately. Exact quote is based on tile area and condition."}, "tile": {"title": "Tile &amp; Shower Reglazing", "from": "From $425", "opt": "Tile / shower reglazing", "icon": "<path d=\"M3 9h18M3 15h18M9 3v18M15 3v18\"/>", "desc": "Shower walls, tub surrounds, and backsplashes resurfaced to a fresh, easy-clean glossy coat \u2014 no tear-out, no re-tiling, no mess. A dated or stained shower looks new again in a single visit.", "inc": ["Deep clean &amp; mildew treatment", "Crack &amp; damaged-grout repair", "Full reglaze of walls and surround", "Smooth, easy-clean glossy finish", "3-year written warranty"], "note": "<b>From $425.</b> Price depends on the square footage and condition of the surfaces \u2014 confirmed at your free estimate."}, "counter": {"title": "Countertop Resurfacing", "from": "From $300", "opt": "Countertop resurfacing", "icon": "<path d=\"M3 10h18v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3Z\"/><path d=\"M3 10V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2\"/>", "desc": "Bath and kitchen counters \u2014 laminate, tile, or Formica \u2014 resurfaced with a durable coating and optional stone-look fleck finishes that mimic granite or quartz, all for a fraction of the cost of replacement.", "inc": ["Surface prep, cleaning &amp; chip repair", "Durable resurfacing coat", "Optional stone-look fleck finish", "Sealed, easy-to-clean surface", "Written warranty coverage"], "note": "<b>From $300.</b> Varies by counter size and the finish you choose. We'll give you a fixed quote before any work begins."}, "sink": {"title": "Sink &amp; Chip Repair", "from": "From $150", "opt": "Sink / chip repair", "icon": "<path d=\"M12 3c-3 4-6 6.5-6 10a6 6 0 0 0 12 0c0-3.5-3-6-6-10Z\"/>", "desc": "Porcelain bathroom and kitchen sinks restored to a like-new shine, plus fast spot repair for chips, scratches, and worn fixtures. A quick, affordable way to freshen up without replacing anything.", "inc": ["Full sink reglaze or targeted chip/scratch repair", "Color match to your fixtures", "Smooth, sealed, glossy finish", "Quick turnaround on small repairs"], "note": "<b>From $150.</b> Small chip and scratch repairs are quick and budget-friendly; a full sink reglaze is priced by size and condition."}, "commercial": {"title": "Commercial &amp; Property", "from": "Volume pricing", "opt": "Commercial / property", "icon": "<path d=\"M4 21V10l8-6 8 6v11\"/><path d=\"M9 21v-6h6v6\"/>", "desc": "Hotels, apartment complexes, B&amp;Bs, and rental properties \u2014 high-volume reglazing scheduled around your turnovers with minimal unit downtime. Reglaze instead of replace and keep units earning. Most are back in service within 24 hours.", "inc": ["Custom volume / per-unit pricing", "Flexible scheduling around turnovers", "Tubs, tile &amp; countertops covered", "Fast 24-hour cure time", "Priority booking for property partners"], "note": "<b>Custom volume pricing.</b> Call us for a property walkthrough and a bulk quote tailored to your number of units."}};
+  var overlay=document.getElementById('svcModal');
+  var elIcon=document.getElementById('svcModalIcon'),elTitle=document.getElementById('svcModalTitle'),
+      elFrom=document.getElementById('svcModalFrom'),elDesc=document.getElementById('svcModalDesc'),
+      elInc=document.getElementById('svcModalInc'),elNote=document.getElementById('svcModalNote'),
+      elQuote=document.getElementById('svcModalQuote'),elClose=document.getElementById('svcModalClose');
+  var tick='<span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>';
+  var currentOpt='';
+  function open(key){
+    var d=SVC[key]; if(!d) return;
+    elIcon.innerHTML=d.icon; elTitle.innerHTML=d.title; elFrom.innerHTML=d.from;
+    elDesc.innerHTML=d.desc; elNote.innerHTML=d.note;
+    elInc.innerHTML=d.inc.map(function(i){return '<li>'+tick+'<span>'+i+'</span></li>';}).join('');
+    currentOpt=d.opt;
+    overlay.classList.add('open'); overlay.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-lock');
+  }
+  function close(){
+    overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true');
+    document.body.classList.remove('modal-lock');
+  }
+  document.querySelectorAll('.svc[data-svc]').forEach(function(card){
+    card.addEventListener('click',function(){open(card.getAttribute('data-svc'));});
+    card.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();open(card.getAttribute('data-svc'));}
+    });
+  });
+  elClose.addEventListener('click',close);
+  overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&overlay.classList.contains('open'))close();});
+  elQuote.addEventListener('click',function(){
+    var sel=document.querySelector('#quoteForm select[name="Service Needed"]');
+    if(sel&&currentOpt){
+      for(var i=0;i<sel.options.length;i++){
+        if(sel.options[i].text.trim()===currentOpt){sel.selectedIndex=i;break;}
+      }
+    }
+    close();
+    var q=document.getElementById('quote');
+    if(q)q.scrollIntoView({behavior:'smooth'});
+  });
+})();
+</script>
+<script>
+(function(){
+  var vp=document.getElementById('baCarousel'); if(!vp) return;
+  var track=vp.querySelector('.ba-track');
+  var slides=[].slice.call(vp.querySelectorAll('.ba-slide'));
+  var dotsWrap=vp.querySelector('.ba-dots');
+  var priceB=vp.querySelector('.price-float b'), priceS=vp.querySelector('.price-float span');
+  var i=0, timer=null;
+  var reduce=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  slides.forEach(function(s,idx){
+    var d=document.createElement('button');
+    d.className='ba-dot'+(idx===0?' active':'');
+    d.setAttribute('aria-label','Show example '+(idx+1));
+    d.addEventListener('click',function(){go(idx);reset();});
+    dotsWrap.appendChild(d);
+  });
+  var dots=[].slice.call(dotsWrap.children);
+  function go(n){
+    i=(n+slides.length)%slides.length;
+    track.style.transform='translateX('+(-i*100)+'%)';
+    dots.forEach(function(d,x){d.classList.toggle('active',x===i);});
+    var sl=slides[i];
+    if(priceB)priceB.textContent=sl.getAttribute('data-price');
+    if(priceS)priceS.textContent=sl.getAttribute('data-vs');
+  }
+  function start(){ if(reduce) return; timer=setInterval(function(){go(i+1);},4500); }
+  function reset(){ clearInterval(timer); start(); }
+  vp.querySelector('.ba-prev').addEventListener('click',function(){go(i-1);reset();});
+  vp.querySelector('.ba-next').addEventListener('click',function(){go(i+1);reset();});
+  vp.addEventListener('mouseenter',function(){clearInterval(timer);});
+  vp.addEventListener('mouseleave',start);
+  go(0); start();
+})();
+</script>
 </body>
 </html>
