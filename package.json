@@ -1,0 +1,8 @@
+{
+  "name": "bathpros",
+  "private": true,
+  "description": "The Bath Pros marketing site",
+  "scripts": {
+    "test": "node --test tests/zoho-quote.test.js"
+  }
+}

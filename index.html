@@ -529,18 +529,9 @@ body.modal-lock{overflow:hidden}
     <div class="form">
       <h3>Get Your Free Quote</h3>
       <p class="sub">Fast response &mdash; usually within one business day.</p>
-      <form id="quoteForm" action="https://api.web3forms.com/submit" method="POST">
-        <!-- ============================================================= -->
-        <!-- STEP 1: paste your free Web3Forms access key between the quotes -->
-        <!-- below. Get it at https://web3forms.com (enter Alvin's email,    -->
-        <!-- they email you the key). That's the only change needed to make -->
-        <!-- leads start arriving in his inbox.                              -->
-        <!-- ============================================================= -->
-        <input type="hidden" name="access_key" value="be5f5cdc-60b2-4961-9cf2-901bfe8a9e63">
-        <input type="hidden" name="subject" value="New Free Estimate Request - The Bath Pros">
-        <input type="hidden" name="from_name" value="The Bath Pros Website">
-        <!-- honeypot spam trap (hidden from real users) -->
-        <input type="checkbox" name="botcheck" style="display:none">
+      <form id="quoteForm" action="/api/quote" method="POST">
+        <!-- Site honeypot (hidden from real users). Zoho hidden fields are added server-side. -->
+        <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
         <div class="form-row">
           <div class="field"><label>Name</label><input type="text" name="Name" placeholder="Your name" required></div>
           <div class="field"><label>Phone</label><input type="tel" name="Phone" placeholder="(508) 000-0000" required></div>
@@ -575,11 +566,11 @@ body.modal-lock{overflow:hidden}
           e.preventDefault();
           btn.textContent = 'Sending\u2026';
           btn.disabled = true;
-          var data = new FormData(form);
-          fetch('https://api.web3forms.com/submit', {
+          var data = Object.fromEntries(new FormData(form).entries());
+          fetch('/api/quote', {
             method:'POST',
-            headers:{'Accept':'application/json'},
-            body:data
+            headers:{'Accept':'application/json','Content-Type':'application/json'},
+            body:JSON.stringify(data)
           }).then(function(r){return r.json();}).then(function(res){
             if(res.success){
               form.reset();
