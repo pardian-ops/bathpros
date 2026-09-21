@@ -187,7 +187,7 @@ section.blk{padding:88px 0}
 .qcall .ph svg{width:26px;height:26px}
 .qcall span{display:block;font-size:.8rem;color:#cfe0f5}
 .qcall b{font-family:var(--display);font-size:1.7rem;letter-spacing:.01em}
-.form{background:#fff;border-radius:18px;padding:34px;box-shadow:var(--shadow)}
+.form{background:#fff;border-radius:18px;padding:34px;box-shadow:var(--shadow);position:relative}
 .form h3{color:var(--navy);font-size:1.9rem;margin-bottom:4px}
 .form .sub{color:#6a7990;font-size:.94rem;margin-bottom:22px}
 .field{margin-bottom:15px}
@@ -197,6 +197,7 @@ section.blk{padding:88px 0}
 .form .btn-primary{width:100%;justify-content:center;margin-top:6px}
 .form .fineprint{text-align:center;font-size:.78rem;color:#8a96ab;margin-top:14px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hp{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 /* FOOTER */
 footer{background:var(--navy-deep);color:#9bb0d4;padding:56px 0 28px;font-size:.93rem}
@@ -419,8 +420,13 @@ footer{background:var(--navy-deep);color:#9bb0d4;padding:56px 0 28px;font-size:.
       <h3>Get Your Free Quote</h3>
       <p class="sub">Fast response &mdash; usually within one business day.</p>
       <form id="quoteForm" action="/api/quote" method="POST">
-        <!-- Site honeypot (hidden from real users). Zoho hidden fields are added server-side. -->
-        <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+        <!-- Honeypots + timing token (hidden from real users). Must stay empty. Zoho hidden fields are added server-side. -->
+        <div class="hp" aria-hidden="true">
+          <label for="quoteWebsite">Website</label>
+          <input type="text" name="website" id="quoteWebsite" tabindex="-1" autocomplete="off" data-lpignore="true">
+        </div>
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="quote_started" id="quoteStarted" value="">
         <div class="form-row">
           <div class="field"><label>Name</label><input type="text" name="Name" placeholder="Your name" required></div>
           <div class="field"><label>Phone</label><input type="tel" name="Phone" placeholder="(508) 000-0000" required></div>
@@ -451,11 +457,23 @@ footer{background:var(--navy-deep);color:#9bb0d4;padding:56px 0 28px;font-size:.
         var form = document.getElementById('quoteForm');
         var btn  = document.getElementById('quoteBtn');
         var note = document.getElementById('quoteNote');
+        var started = Date.now();
+        var startedEl = document.getElementById('quoteStarted');
+        if (startedEl) startedEl.value = String(started);
         form.addEventListener('submit', function(e){
           e.preventDefault();
           btn.textContent = 'Sending\u2026';
           btn.disabled = true;
           var data = Object.fromEntries(new FormData(form).entries());
+          data.quote_started = String(started);
+          var hp = (data.website || '').trim();
+          if (hp || (data.botcheck && ['false','0','off','no'].indexOf(String(data.botcheck).toLowerCase()) === -1)) {
+            form.reset();
+            if (startedEl) startedEl.value = String(Date.now());
+            btn.textContent = '\u2713 Thank you \u2014 we will be in touch!';
+            note.textContent = 'Your request was sent. We respond within one business day.';
+            return;
+          }
           fetch('/api/quote', {
             method:'POST',
             headers:{'Accept':'application/json','Content-Type':'application/json'},

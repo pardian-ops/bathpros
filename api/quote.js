@@ -1,11 +1,6 @@
 'use strict';
 
-const {
-  isHoneypotTripped,
-  validateQuote,
-  buildZohoFields,
-  submitToZoho,
-} = require('../lib/zoho-quote');
+const { processQuote } = require('../lib/zoho-quote');
 
 function setCors(req, res) {
   const origin = req.headers.origin || '';
@@ -81,39 +76,18 @@ async function handler(req, res) {
     return;
   }
 
-  if (isHoneypotTripped(input)) {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.end(JSON.stringify({ success: true }));
-    return;
+  // Spam (honeypot, Cyrillic/non-Latin, foreign location, disposable
+  // email, spam URLs, too-fast submit) is silently dropped: same
+  // { success: true } JSON as a real Lead, and Zoho is not called.
+  const result = await processQuote(input);
+  if (result.dropped) {
+    console.info('quote dropped as spam');
+  } else if (result.status >= 500) {
+    console.error('quote submit failed', result.body && result.body.message);
   }
-
-  const validationError = validateQuote(input);
-  if (validationError) {
-    res.statusCode = 400;
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.end(JSON.stringify({ success: false, message: validationError }));
-    return;
-  }
-
-  try {
-    const result = await submitToZoho(buildZohoFields(input));
-    if (!result.ok) {
-      console.error('Zoho webform rejected quote', { status: result.status });
-      res.statusCode = 502;
-      res.setHeader('Content-Type', 'application/json; charset=utf-8');
-      res.end(JSON.stringify({ success: false, message: 'Zoho did not accept the lead' }));
-      return;
-    }
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.end(JSON.stringify({ success: true }));
-  } catch (error) {
-    console.error('Zoho webform request failed', error && error.message);
-    res.statusCode = 502;
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.end(JSON.stringify({ success: false, message: 'Could not reach Zoho CRM' }));
-  }
+  res.statusCode = result.status;
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.end(JSON.stringify(result.body));
 }
 
 module.exports = handler;
