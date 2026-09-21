@@ -183,6 +183,13 @@ test('flags non-Latin copy, disposable email, long text, and too-fast submits', 
     ),
     false
   );
+  assert.equal(
+    isSpamQuote(
+      { ...sample, quote_started: String(1_700_000_000_000) },
+      1_700_000_000_000 + 36 * 60 * 60 * 1000
+    ),
+    false
+  );
 });
 
 test('treats promotional or suspicious URLs in project details as spam', () => {
