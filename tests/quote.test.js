@@ -3,17 +3,17 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
-  splitName,
-  parseStateZip,
-  normalizeState,
-  buildZohoFields,
   validateQuote,
   isHoneypotTripped,
   isSpamQuote,
-  isZohoSuccess,
+  buildWeb3FormsFields,
+  processQuote,
   MIN_FORM_ELAPSED_MS,
-  ZOHO_HIDDEN,
-} = require('../lib/zoho-quote');
+  WEB3FORMS_URL,
+  WEB3FORMS_ACCESS_KEY,
+  WEB3FORMS_SUBJECT,
+  WEB3FORMS_FROM_NAME,
+} = require('../lib/quote');
 
 const sample = {
   Name: 'Jane Q Public',
@@ -26,62 +26,55 @@ const sample = {
   'Project Details': 'Cast iron tub, chips on the overflow.',
 };
 
-test('splits a full name into first and last', () => {
-  assert.deepEqual(splitName('Jane Q Public'), { first: 'Jane Q', last: 'Public' });
-  assert.deepEqual(splitName('Cher'), { first: '', last: 'Cher' });
-});
-
-test('parses common State and ZIP formats', () => {
-  assert.deepEqual(parseStateZip('MA 01601'), {
-    state: 'Massachusetts',
-    zip: '01601',
-    parsed: true,
-    raw: 'MA 01601',
-  });
-  assert.equal(parseStateZip('Massachusetts, 01601-1234').zip, '01601-1234');
-  assert.equal(parseStateZip('FL 33401').state, 'Florida (United States)');
-  assert.equal(parseStateZip('01608').zip, '01608');
-  assert.equal(parseStateZip('01608').state, '');
-});
-
-test('maps US abbreviations to Zoho picklist labels', () => {
-  assert.equal(normalizeState('ma'), 'Massachusetts');
-  assert.equal(normalizeState('Florida'), 'Florida (United States)');
-  assert.equal(normalizeState('Montana'), 'Montana (United States)');
-  assert.equal(normalizeState('Narnia'), '');
-});
-
-test('builds Zoho webform fields with hidden digests and required Company', () => {
-  const fields = buildZohoFields(sample);
-  assert.equal(fields.xnQsjsdp, ZOHO_HIDDEN.xnQsjsdp);
-  assert.equal(fields.xmIwtLD, ZOHO_HIDDEN.xmIwtLD);
-  assert.equal(fields.actionType, 'TGVhZHM=');
-  assert.equal(fields.zc_gad, '');
-  assert.equal(fields.aG9uZXlwb3Q, '');
-  assert.equal(fields.returnURL, 'https://www.thebathpros.net/#quote');
-  assert.equal(fields.Company, 'Residential');
-  assert.equal(fields['Last Name'], 'Public');
-  assert.equal(fields['First Name'], 'Jane Q');
-  assert.equal(fields.Email, 'jane@example.com');
-  assert.equal(fields.Phone, '(508) 348-9615');
-  assert.equal(fields['Address - Street Address'], '12 Main St');
-  assert.equal(fields['Address - City'], 'Worcester');
-  assert.equal(fields['Address - State / Province'], 'Massachusetts');
-  assert.equal(fields['Address - Zip / Postal Code'], '01601');
-  assert.match(fields.Description, /Service Needed: Bathtub reglazing/);
-  assert.match(fields.Description, /Project Details: Cast iron tub/);
-  assert.equal(fields.access_key, undefined);
-  assert.equal(fields.subject, undefined);
-  assert.equal(fields.from_name, undefined);
-});
-
-test('keeps unparsed State and ZIP in Description', () => {
-  const fields = buildZohoFields({
+test('builds a Web3Forms payload with the public access key and form fields', () => {
+  const fields = buildWeb3FormsFields({
     ...sample,
-    'State and ZIP': 'Greater Boston corridor',
+    website: 'https://spam.example',
+    botcheck: '',
+    quote_started: '1700000000000',
+    xnQsjsdp: 'must-not-forward',
   });
-  assert.equal(fields['Address - State / Province'], undefined);
-  assert.match(fields.Description, /State and ZIP \(as entered\): Greater Boston corridor/);
+  assert.equal(fields.access_key, WEB3FORMS_ACCESS_KEY);
+  assert.equal(fields.access_key, 'be5f5cdc-60b2-4961-9cf2-901bfe8a9e63');
+  assert.equal(fields.subject, WEB3FORMS_SUBJECT);
+  assert.equal(fields.subject, 'New Free Estimate Request - The Bath Pros');
+  assert.equal(fields.from_name, WEB3FORMS_FROM_NAME);
+  assert.equal(fields.from_name, 'The Bath Pros Website');
+  assert.equal(fields.Name, 'Jane Q Public');
+  assert.equal(fields.Phone, '(508) 348-9615');
+  assert.equal(fields.Email, 'jane@example.com');
+  assert.equal(fields['Service Address'], '12 Main St');
+  assert.equal(fields['City or Town'], 'Worcester');
+  assert.equal(fields['State and ZIP'], 'MA 01601');
+  assert.equal(fields['Service Needed'], 'Bathtub reglazing');
+  assert.equal(fields['Project Details'], 'Cast iron tub, chips on the overflow.');
+  assert.equal(fields.website, undefined);
+  assert.equal(fields.botcheck, undefined);
+  assert.equal(fields.quote_started, undefined);
+  assert.equal(fields.xnQsjsdp, undefined);
+  assert.equal(fields.Company, undefined);
+});
+
+test('returns a browser deliver payload and does not call Web3Forms itself', async () => {
+  const original = global.fetch;
+  let called = 0;
+  global.fetch = async () => {
+    called += 1;
+    throw new Error('server must not POST to Web3Forms');
+  };
+  try {
+    const result = await processQuote(sample);
+    assert.equal(result.status, 200);
+    assert.equal(result.dropped, false);
+    assert.equal(called, 0);
+    assert.equal(result.body.success, true);
+    assert.equal(result.body.deliver.access_key, WEB3FORMS_ACCESS_KEY);
+    assert.equal(result.body.deliver.subject, WEB3FORMS_SUBJECT);
+    assert.equal(result.body.deliver['State and ZIP'], 'MA 01601');
+    assert.equal(WEB3FORMS_URL, 'https://api.web3forms.com/submit');
+  } finally {
+    global.fetch = original;
+  }
 });
 
 test('validates required site fields', () => {
@@ -95,15 +88,6 @@ test('treats filled honeypots as bots', () => {
   assert.equal(isHoneypotTripped({ ...sample, botcheck: 'on' }), true);
   assert.equal(isHoneypotTripped({ ...sample, aG9uZXlwb3Q: 'spam' }), true);
   assert.equal(isHoneypotTripped({ ...sample, website: 'https://spam.test' }), true);
-});
-
-test('detects Zoho thank-you HTML as success', () => {
-  const body =
-    '<div id="wf_thankyoumessage"><b>Thank you for submitting your response.</b></div>';
-  assert.equal(isZohoSuccess(200, '', body), true);
-  assert.equal(isZohoSuccess(302, 'https://www.thebathpros.net/#quote', ''), true);
-  assert.equal(isZohoSuccess(500, '', body), false);
-  assert.equal(isZohoSuccess(200, '', '<html>cannot be empty</html>'), false);
 });
 
 const knownSpam = {
