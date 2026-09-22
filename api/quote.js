@@ -1,6 +1,6 @@
 'use strict';
 
-const { processQuote } = require('../lib/zoho-quote');
+const { processQuote } = require('../lib/quote');
 
 function setCors(req, res) {
   const origin = req.headers.origin || '';
@@ -78,7 +78,8 @@ async function handler(req, res) {
 
   // Spam (honeypot, Cyrillic/non-Latin, foreign location, disposable
   // email, spam URLs, too-fast submit) is silently dropped: same
-  // { success: true } JSON as a real Lead, and Zoho is not called.
+  // { success: true } JSON as a real submission, with no deliver payload.
+  // Accepted quotes include deliver fields for the browser to POST to Web3Forms.
   const result = await processQuote(input);
   if (result.dropped) {
     console.info('quote dropped as spam');

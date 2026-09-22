@@ -421,7 +421,7 @@ footer{background:var(--navy-deep);color:#9bb0d4;padding:56px 0 28px;font-size:.
       <h3>Get Your Free Quote</h3>
       <p class="sub">Fast response &mdash; usually within one business day.</p>
       <form id="quoteForm" action="/api/quote" method="POST">
-        <!-- Honeypots + timing token (hidden from real users). Must stay empty. Zoho hidden fields are added server-side. -->
+        <!-- Honeypots + timing token (hidden from real users). Must stay empty. Accepted quotes are sent to Web3Forms by the browser. -->
         <div class="hp" aria-hidden="true">
           <label for="quoteWebsite">Website</label>
           <input type="text" name="website" id="quoteWebsite" tabindex="-1" autocomplete="off" data-lpignore="true">
@@ -480,7 +480,21 @@ footer{background:var(--navy-deep);color:#9bb0d4;padding:56px 0 28px;font-size:.
             headers:{'Accept':'application/json','Content-Type':'application/json'},
             body:JSON.stringify(data)
           }).then(function(r){return r.json();}).then(function(res){
-            if(res.success){
+            if(res && res.success && res.deliver){
+              var deliver = new FormData();
+              Object.keys(res.deliver).forEach(function(key){
+                var value = res.deliver[key];
+                deliver.append(key, value == null ? '' : String(value));
+              });
+              return fetch('https://api.web3forms.com/submit', {
+                method:'POST',
+                headers:{'Accept':'application/json'},
+                body:deliver
+              }).then(function(r){return r.json();});
+            }
+            return res;
+          }).then(function(res){
+            if(res && res.success){
               form.reset();
               btn.textContent = '\u2713 Thank you \u2014 we will be in touch!';
               note.textContent = 'Your request was sent. We respond within one business day.';
